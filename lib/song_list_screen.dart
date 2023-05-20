@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/url_input_screen.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'database_helper.dart';
 import 'song_details_screen.dart'; // Import the SongDetailsScreen
 
 Future<List<String>> loadSongsFromLocalStorage() async {
@@ -30,7 +28,6 @@ class SongListScreen extends StatefulWidget {
 }
 
 class _SongListScreenState extends State<SongListScreen> {
-  List<bool> isFavoriteList = List.generate(5, (_) => false);
   List<String> songList = [];
 
   @override
@@ -57,28 +54,6 @@ class _SongListScreenState extends State<SongListScreen> {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text('Song $index'),
-              trailing: IconButton(
-                icon: Icon(
-                  isFavoriteList[index]
-                      ? Icons.favorite
-                      : Icons.favorite_border,
-                ),
-                onPressed: () async {
-                  setState(() {
-                    isFavoriteList[index] = !isFavoriteList[index];
-                  });
-
-                  if (isFavoriteList[index]) {
-                    final songName = 'Song $index';
-                    await DatabaseHelper.instance.insertSong(songName);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Song added to favorites')),
-                    );
-                  }
-                },
-                color: Colors
-                    .grey, // Change the color of the heart icon when it is not tapped
-              ),
               onTap: () {
                 Navigator.push(
                   context,
